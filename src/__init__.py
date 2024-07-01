@@ -2,12 +2,12 @@
 
 from flask import Flask
 from flask_cors import CORS
-
+from flask_sqlalchemy import SQLAlchemy
 from src.persistence.repository import RepositoryManager
 
 cors = CORS()
 repo = RepositoryManager()
-
+db = SQLAlchemy()  # Instancia de SQLAlchemy agregada
 
 def create_app(config_class="src.config.DevelopmentConfig") -> Flask:
     """
@@ -32,6 +32,7 @@ def register_extensions(app: Flask) -> None:
     """Register the extensions for the Flask app"""
     cors.init_app(app, resources={r"/*": {"origins": "*"}})
     repo.init_app(app)
+    db.init_app(app)  # Inicializa SQLAlchemy con la app
     # Further extensions can be added here
 
 
