@@ -3,22 +3,17 @@ City related functionality
 """
 
 from src.models.base import Base
-from src import repo
+from src import repo, db
 from src.models.country import Country
 
 
 class City(Base):
     """City representation"""
 
-    name: str
-    country_code: str
+    __tablename__ = 'cities'
 
-    def __init__(self, name: str, country_code: str, **kw) -> None:
-        """Dummy init"""
-        super().__init__(**kw)
-
-        self.name = name
-        self.country_code = country_code
+    name = db.Column(db.String(100), nullable=False)
+    country_code = db.Column(db.String(3), db.ForeignKey('countries.code'), nullable=False)
 
     def __repr__(self) -> str:
         """Dummy repr"""

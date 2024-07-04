@@ -2,33 +2,20 @@
 User related functionality
 """
 
-from src import repo
-from typing import Optional
+from src import repo, db
 from src.models.base import Base
 
 
 class User(Base):
     """User representation"""
 
-    email: str
-    password: str | None
-    first_name: str
-    last_name: str
-
-    def __init__(
-        self,
-        email: str,
-        first_name: str,
-        last_name: str,
-        password: Optional[str] = None,
-        **kw,
-    ):
-        """Dummy init"""
-        super().__init__(**kw)
-        self.email = email
-        self.password = password
-        self.first_name = first_name
-        self.last_name = last_name
+    __tablename__ = 'users'
+    
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password = db.Column(db.String(128), nullable=False)
+    first_name = db.Column(db.String(50), nullable=False)
+    last_name = db.Column(db.String(50), nullable=False)
+    is_admin = db.Column(db.Boolean, default=False)
 
     def __repr__(self) -> str:
         """Dummy repr"""
@@ -43,6 +30,7 @@ class User(Base):
             "last_name": self.last_name,
             "created_at": self.created_at.isoformat(),
             "updated_at": self.updated_at.isoformat(),
+            "is_admin": self.is_admin
         }
 
     @staticmethod

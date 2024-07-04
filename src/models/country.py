@@ -2,10 +2,10 @@
 Country related functionality
 """
 
-from src import repo
+from src import repo, db
+from typing import List
 
-
-class Country:
+class Country(db.Model):
     """
     Country representation
 
@@ -14,15 +14,11 @@ class Country:
     This class is used to get and list countries
     """
 
-    name: str
-    code: str
-    cities: list
+    __tablename__ = 'countries'
 
-    def __init__(self, name: str, code: str, **kw) -> None:
-        """Dummy init"""
-        super().__init__(**kw)
-        self.name = name
-        self.code = code
+    code = db.Column(db.String(3), primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    cities = db.relationship('City', backref='country', lazy=True)
 
     def __repr__(self) -> str:
         """Dummy repr"""
@@ -36,7 +32,7 @@ class Country:
         }
 
     @staticmethod
-    def get_all() -> list["Country"]:
+    def get_all() -> List["Country"]:
         """Get all countries"""
         countries: list["Country"] = repo.get_all("country")
 

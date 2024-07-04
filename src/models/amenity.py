@@ -3,19 +3,15 @@ Amenity related functionality
 """
 
 from src.models.base import Base
-from src import repo
+from src import repo, db
 
 
 class Amenity(Base):
     """Amenity representation"""
 
-    name: str
+    __tablename__ = 'amenities'
 
-    def __init__(self, name: str, **kw) -> None:
-        """Dummy init"""
-        super().__init__(**kw)
-
-        self.name = name
+    name = db.Column(db.String(100), unique=True, nullable=False)
 
     def __repr__(self) -> str:
         """Dummy repr"""
@@ -65,8 +61,14 @@ class Amenity(Base):
 class PlaceAmenity(Base):
     """PlaceAmenity representation"""
 
-    place_id: str
-    amenity_id: str
+class PlaceAmenity(Base):
+    """PlaceAmenity representation"""
+
+    __tablename__ = 'place_amenities'
+
+    place_id = db.Column(db.String(36), db.ForeignKey('places.id'), nullable=False)
+    amenity_id = db.Column(db.String(36), db.ForeignKey('amenities.id'), nullable=False)
+
 
     def __init__(self, place_id: str, amenity_id: str, **kw) -> None:
         """Dummy init"""
