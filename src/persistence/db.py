@@ -11,7 +11,9 @@
     - delete
     - reload (which can be empty)
 """
+# Archivo que implementa el metodo de persistencia de tipo database (SQLAlchemy)
 
+from src import db
 from src.models.base import Base
 from src.persistence.repository import Repository
 
@@ -20,24 +22,38 @@ class DBRepository(Repository):
     """Dummy DB repository"""
 
     def __init__(self) -> None:
-        """Not implemented"""
+        """Initialize the DBRepository"""
 
     def get_all(self, model_name: str) -> list:
-        """Not implemented"""
+        """Get all objects of the wanted model"""
+        model_class = Base._decl_class_registry.get(model_name.capitalize())
+        if model_class:
+            return model_class.query.all()
         return []
 
     def get(self, model_name: str, obj_id: str) -> Base | None:
-        """Not implemented"""
+        """Get an object by ID"""
+        model_class = Base._decl_class_registry.get(model_name.capitalize())
+        if model_class:
+            return model_class.query.get(obj_id)
+        return None
 
     def reload(self) -> None:
-        """Not implemented"""
+        """Reload data to the repository"""
+        pass
 
     def save(self, obj: Base) -> None:
-        """Not implemented"""
+        """Save an object"""
+        db.session.add(obj)
+        db.session.commit()
 
     def update(self, obj: Base) -> Base | None:
-        """Not implemented"""
+        """Update an object"""
+        db.session.commit()
+        return obj
 
     def delete(self, obj: Base) -> bool:
-        """Not implemented"""
-        return False
+        """Delete an object"""
+        db.session.delete(obj)
+        db.session.commit()
+        return True
