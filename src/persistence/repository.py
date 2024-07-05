@@ -1,4 +1,5 @@
 """ Repository pattern for data access layer """
+# Interfaz del repo y gestiona la inicializacion del mismo.
 
 from abc import ABC, abstractmethod
 from typing import Any
@@ -55,10 +56,26 @@ class RepositoryManager:
         return self.repo.get_all(model_name)
 
     def save(self, obj) -> None:
-        return self.repo.save(obj)
+        if self.app.config.get("USE_DATABASE"):
+            from src import db
+            db.session.add(obj)
+            db.session.commit()
+        else:
+            return self.repo.save(obj)
 
     def update(self, obj) -> None:
-        return self.repo.update(obj)
+        if self.app.config.get("USE_DATABASE"):
+            from src import db
+            db.session.commit()
+            return obj
+        else:
+            return self.repo.update(obj)
 
     def delete(self, obj) -> bool:
-        return self.repo.delete(obj)
+        if self.app.config.get("USE_DATABASE"):
+            from src import db
+            db.session.delete(obj)
+            db.session.commit()
+            return True
+        else:
+            return self.repo.delete(obj)
