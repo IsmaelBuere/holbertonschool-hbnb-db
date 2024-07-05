@@ -6,6 +6,7 @@ This module exports configuration classes for the Flask application.
 - ProductionConfig
 
 """
+# Configura la aplicacion y base de datos
 
 from abc import ABC
 import os
@@ -22,6 +23,7 @@ class Config(ABC):
     TESTING = False
 
     REPOSITORY = os.getenv(REPOSITORY_ENV_VAR, DEFAULT_REPOSITORY)
+    USE_DATABASE = os.getenv("USE_DATABASE", "False").lower() in ("true", "1", "t")
 
     SWAGGER_UI_DOC_EXPANSION = "list"
     RESTX_VALIDATE = True
