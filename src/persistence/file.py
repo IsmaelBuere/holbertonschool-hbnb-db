@@ -13,7 +13,7 @@ class FileRepository(Repository):
     """File Repository"""
 
     __filename = FILE_STORAGE_FILENAME
-    __data: dict[str, list] = {
+    __data = {
         "country": [],
         "user": [],
         "amenity": [],
@@ -57,7 +57,7 @@ class FileRepository(Repository):
         except FileNotFoundError:
             from src.models.country import Country
 
-            self.__data["country"] = [Country("Uruguay", "UY")]
+            self.__data["country"] = [Country(code="UY", name="Uruguay")]
 
             self._save_to_file()
 

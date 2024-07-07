@@ -4,6 +4,7 @@ User related functionality
 
 from src import repo, db
 from src.models.base import Base
+from datetime import datetime
 
 
 class User(Base):
@@ -16,6 +17,13 @@ class User(Base):
     first_name = db.Column(db.String(50), nullable=False)
     last_name = db.Column(db.String(50), nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.created_at is None:
+            self.created_at = datetime.now()
+        if self.updated_at is None:
+            self.updated_at = datetime.now()
 
     def __repr__(self) -> str:
         """Dummy repr"""

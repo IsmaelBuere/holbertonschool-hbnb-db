@@ -6,12 +6,19 @@ This module exports configuration classes for the Flask application.
 - ProductionConfig
 
 """
-# Configura la aplicacion y base de datos
 
 from abc import ABC
 import os
 from utils.constants import REPOSITORY_ENV_VAR, DEFAULT_REPOSITORY
 
+def get_config():
+    env_config = os.getenv('ENV_CONFIG', 'dev').lower()
+    if env_config == 'prod':
+        return ProductionConfig()
+    elif env_config == 'test':
+        return TestingConfig()
+    else:
+        return DevelopmentConfig()
 
 class Config(ABC):
     """
@@ -68,7 +75,7 @@ class TestingConfig(Config):
     """
 
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"
+    SQLALCHEMY_DATABASE_URI = os.getenv("TEST_DATABASE_URL", "sqlite:///:memory:")
 
 
 class ProductionConfig(Config):
@@ -83,6 +90,4 @@ class ProductionConfig(Config):
     TESTING = False
     DEBUG = False
 
-    SQLALCHEMY_DATABASE_URI = os.getenv(
-        "DATABASE_URL", "postgresql://user:password@localhost/hbnb_prod"
-    )
+    SQLALCHEMY_DATABASE_URI = os.getenv("PROD_DATABASE_URL", "postgresql://user:password@localhost/hbnb_prod")

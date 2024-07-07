@@ -2,12 +2,17 @@
 
 from flask import Flask
 from flask_cors import CORS
-from flask_sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy  # Importar SQLAlchemy
+from flask_migrate import Migrate # Importar Flask migrate
 from src.persistence.repository import RepositoryManager
+from src.config import get_config
+from dotenv import load_dotenv
 
 cors = CORS()
 repo = RepositoryManager()
-db = SQLAlchemy()  # Instancia de SQLAlchemy agregada
+db = SQLAlchemy()  # Inicializa SQLAlchemy
+load_dotenv() # Inicializa para cargar variables de entorno desde el archivo ".env"
+migrate = Migrate()
 
 def create_app(config_class="src.config.DevelopmentConfig") -> Flask:
     """
@@ -32,9 +37,10 @@ def register_extensions(app: Flask) -> None:
     """Register the extensions for the Flask app"""
     cors.init_app(app, resources={r"/*": {"origins": "*"}})
     repo.init_app(app)
-    db.init_app(app)  # Inicializa SQLAlchemy con la app
-    # Further extensions can be added here
-
+    db.init_app(app)  # inicializa db
+    migrate.init_app(app, db)  # Inicializa Flask-Migrate con la app y db
+    with app.app_context():  # Crear todas las tablas necesarias en la base de datos
+        db.create_all()
 
 def register_routes(app: Flask) -> None:
     """Import and register the routes for the Flask app"""

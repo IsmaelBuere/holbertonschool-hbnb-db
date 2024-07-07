@@ -16,6 +16,7 @@
 from src import db
 from src.models.base import Base
 from src.persistence.repository import Repository
+from typing import Optional
 
 
 class DBRepository(Repository):
@@ -31,7 +32,7 @@ class DBRepository(Repository):
             return model_class.query.all()
         return []
 
-    def get(self, model_name: str, obj_id: str) -> Base | None:
+    def get(self, model_name: str, obj_id: str) -> Optional[Base]:
         """Get an object by ID"""
         model_class = Base._decl_class_registry.get(model_name.capitalize())
         if model_class:
@@ -47,7 +48,7 @@ class DBRepository(Repository):
         db.session.add(obj)
         db.session.commit()
 
-    def update(self, obj: Base) -> Base | None:
+    def update(self, obj: Base) -> Optional[Base]:
         """Update an object"""
         db.session.commit()
         return obj

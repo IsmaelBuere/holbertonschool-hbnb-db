@@ -7,3 +7,4 @@ gunicorn
 SQLAlchemy
 Flask-SQLAlchemy
 Flask-JWT-Extended
+Flask-Migrate

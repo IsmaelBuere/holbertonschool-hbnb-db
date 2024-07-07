@@ -18,7 +18,6 @@ class Country(db.Model):
 
     code = db.Column(db.String(3), primary_key=True)
     name = db.Column(db.String(100), nullable=False)
-    cities = db.relationship('City', backref='country', lazy=True)
 
     def __repr__(self) -> str:
         """Dummy repr"""

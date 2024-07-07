@@ -11,7 +11,7 @@ class PickleRepository(Repository):
     """Pickle Repository"""
 
     __filename = PICKLE_STORAGE_FILENAME
-    __data: dict[str, list] = {
+    __data = {
         "country": [],
         "user": [],
         "amenity": [],

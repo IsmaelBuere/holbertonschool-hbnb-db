@@ -16,7 +16,7 @@ class MemoryRepository(Repository):
     Every time the server is restarted, the data is lost
     """
 
-    __data: dict[str, list] = {
+    __data = {
         "country": [],
         "user": [],
         "amenity": [],

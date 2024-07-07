@@ -4,20 +4,20 @@ from datetime import datetime
 from typing import Any, Optional, List
 from src import repo, db
 import uuid
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 
 
-class Base(db.Model, ABC):
+class Base(db.Model):
     """
     Base Interface for all models
     """
-
+    __abstract__ = True
     id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     updated_at = db.Column(db.DateTime, onupdate=db.func.current_timestamp())
 
     @classmethod
-    def get(cls, id) -> "Any | None":
+    def get(cls, id) -> Optional[Any]:
         """
         This is a common method to get an specific object
         of a class by its id
@@ -28,7 +28,7 @@ class Base(db.Model, ABC):
         return repo.get(cls.__name__.lower(), id)
 
     @classmethod
-    def get_all(cls) -> List ["Any"]:
+    def get_all(cls) -> List[Any]:
         """
         This is a common method to get all objects of a class
 
@@ -64,5 +64,5 @@ class Base(db.Model, ABC):
 
     @staticmethod
     @abstractmethod
-    def update(entity_id: str, data: dict) -> Any | None:
+    def update(entity_id: str, data: dict) -> Optional[Any]:
         """Updates an object of the class"""
