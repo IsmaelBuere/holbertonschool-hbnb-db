@@ -25,7 +25,7 @@ class TestUserRepository(unittest.TestCase):
     def test_create_user_in_memory(self):
         self.app.config['REPOSITORY'] = 'memory'
         self.repo.init_app(self.app)
-        User.query.delete()  # Clear the User table
+        self._clear_users_table()
         user_data = {
             "email": "test@example.com",
             "first_name": "Test",
@@ -40,7 +40,7 @@ class TestUserRepository(unittest.TestCase):
     def test_create_user_in_file(self):
         self.app.config['REPOSITORY'] = 'file'
         self.repo.init_app(self.app)
-        User.query.delete()  # Clear the User table
+        self._clear_users_table()
         user_data = {
             "email": "test2@example.com",
             "first_name": "Test2",
@@ -55,7 +55,7 @@ class TestUserRepository(unittest.TestCase):
     def test_create_user_in_db(self):
         self.app.config['REPOSITORY'] = 'db'
         self.repo.init_app(self.app)
-        User.query.delete()  # Clear the User table
+        self._clear_users_table()
         user_data = {
             "email": "test3@example.com",
             "first_name": "Test3",
@@ -66,6 +66,10 @@ class TestUserRepository(unittest.TestCase):
         user = User.create(user_data)
         self.assertIsNotNone(user.id)
         self.assertEqual(user.email, "test3@example.com")
+
+    def _clear_users_table(self):
+        User.query.delete()
+        db.session.commit()
 
 if __name__ == "__main__":
     unittest.main()

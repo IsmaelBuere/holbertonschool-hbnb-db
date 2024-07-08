@@ -44,15 +44,15 @@ class User(Base):
     @staticmethod
     def create(user: dict) -> "User":
         """Create a new user"""
-        users: list["User"] = User.get_all()
-
-        for u in users:
-            if u.email == user["email"]:
-                raise ValueError("User already exists")
+        existing_user = User.query.filter_by(email=user["email"]).first()
+        
+        if existing_user:
+            raise ValueError("User already exists")
 
         new_user = User(**user)
 
-        repo.save(new_user)
+        db.session.add(new_user)
+        db.session.commit()
 
         return new_user
 
